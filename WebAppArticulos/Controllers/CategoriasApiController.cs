@@ -13,49 +13,51 @@ namespace WebAppArticulos.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductoApiController : ControllerBase
+    public class CategoriasApiController : ControllerBase
     {
         private readonly ArticuloContext _context;
 
-        public ProductoApiController(ArticuloContext context)
+        public CategoriasApiController(ArticuloContext context)
         {
             _context = context;
         }
 
-        // GET: api/ProductoApi
+        // GET: api/CategoriasApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductos()
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategorias()
         {
             try
             {
-                var productos = await _context.Productos.Include(p => p.Categoria).ToListAsync();
-                var productosDTO = new List<ProductoDTO>();
-                productosDTO = productos.Select(p => new ProductoDTO(p)).ToList();
+                var categorias = await _context.Categorias.Include(c => c.Productos).ToListAsync();
+                var categoriasDTO = new List<CategoriaDTO>();
+                categoriasDTO = categorias.Select(c => new CategoriaDTO(c)).ToList();
 
-                return Ok(productosDTO);
+                return Ok(categoriasDTO);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
+
         }
 
-        // GET: api/ProductoApi/5
+        // GET: api/CategoriasApi/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductoDTO>> GetProducto(long id)
+        public async Task<ActionResult<CategoriaDTO>> GetCategoria(long id)
         {
             try
             {
-                var producto = await _context.Productos.Include(p => p.Categoria)
-                                                        .FirstOrDefaultAsync(m => m.Id == id);
+                var categoria = await _context.Categorias.Include(c => c.Productos)
+                                                         .FirstOrDefaultAsync(m => m.Id == id);
 
-                if (producto == null)
+                if (categoria == null)
                 {
                     return NotFound();
                 }
-                var productoDTO = new ProductoDTO(producto);
 
-                return Ok(productoDTO);
+                var categoriaDTO = new CategoriaDTO(categoria);
+
+                return Ok(categoriaDTO);
             }
             catch (Exception ex)
             {
@@ -64,17 +66,17 @@ namespace WebAppArticulos.Controllers
 
         }
 
-        // PUT: api/ProductoApi/5
+        // PUT: api/CategoriasApi/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProducto(long id, Producto producto)
+        public async Task<IActionResult> PutCategoria(long id, Categoria categoria)
         {
-            if (id != producto.Id)
+            if (id != categoria.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(producto).State = EntityState.Modified;
+            _context.Entry(categoria).State = EntityState.Modified;
 
             try
             {
@@ -82,7 +84,7 @@ namespace WebAppArticulos.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductoExists(id))
+                if (!CategoriaExists(id))
                 {
                     return NotFound();
                 }
@@ -95,36 +97,36 @@ namespace WebAppArticulos.Controllers
             return NoContent();
         }
 
-        // POST: api/ProductoApi
+        // POST: api/CategoriasApi
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Producto>> PostProducto(Producto producto)
+        public async Task<ActionResult<Categoria>> PostCategoria(Categoria categoria)
         {
-            _context.Productos.Add(producto);
+            _context.Categorias.Add(categoria);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProducto", new { id = producto.Id }, producto);
+            return CreatedAtAction("GetCategoria", new { id = categoria.Id }, categoria);
         }
 
-        // DELETE: api/ProductoApi/5
+        // DELETE: api/CategoriasApi/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProducto(long id)
+        public async Task<IActionResult> DeleteCategoria(long id)
         {
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto == null)
+            var categoria = await _context.Categorias.FindAsync(id);
+            if (categoria == null)
             {
                 return NotFound();
             }
 
-            _context.Productos.Remove(producto);
+            _context.Categorias.Remove(categoria);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ProductoExists(long id)
+        private bool CategoriaExists(long id)
         {
-            return _context.Productos.Any(e => e.Id == id);
+            return _context.Categorias.Any(e => e.Id == id);
         }
     }
 }
