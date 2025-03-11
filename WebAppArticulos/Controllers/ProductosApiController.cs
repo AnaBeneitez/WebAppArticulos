@@ -13,11 +13,11 @@ namespace WebAppArticulos.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductoApiController : ControllerBase
+    public class ProductosApiController : ControllerBase
     {
         private readonly ArticuloContext _context;
 
-        public ProductoApiController(ArticuloContext context)
+        public ProductosApiController(ArticuloContext context)
         {
             _context = context;
         }
