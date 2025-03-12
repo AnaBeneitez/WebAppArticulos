@@ -1,6 +1,6 @@
 ﻿using WebAppArticulos.Models;
 
-namespace WebAppArticulos.DAO
+namespace WebAppArticulos.Models.DTO_s
 {
     public class ProductoCategoriaDTO
     {
